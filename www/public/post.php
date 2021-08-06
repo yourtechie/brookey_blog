@@ -13,7 +13,7 @@
  	$error['title']="Please include a title";
  	}
  if(empty($_POST['category'])){
- 	$error['title']="Please select the blog category";
+ 	$error['category']="Please select the blog category";
    }
  if(empty($_POST['body'])){
    $error['body']="Please include text";
@@ -51,7 +51,7 @@
        $stmt = $conn->prepare("INSERT INTO blog VALUES(NULL, :tt, :au, :cat, :bd, :cb, :img, NOW(), NOW() )");
       	$data=array(
       		":tt"=>$_POST['title'],
-      		":au"=>$user_data['first_name'].$user_data['last_name'],
+      		":au"=>$user_data['first_name']." ".$user_data['last_name'],
       		":cat"=>$_POST['category'],
       		":bd"=>$_POST['body'],
       		":cb"=>$_SESSION['user_id'],

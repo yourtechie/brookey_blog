@@ -96,8 +96,8 @@ $displayPic = fetchDp($conn,$_GET['id']);
                   <p class="lead"><?=$profile['bio']?></p>
                 </div>
                 <div class="mb-3 text-center">
-                  <h6>Share your profile</h6>
-                  <p class="lead">https://logtrace.com/profile/<?=$user_data['user_name']?></p>
+                  <h6>Share your profile:</h6>
+                  <p class="lead"><a  class="text-decoration-none" href="https://logtrace.com/profile/<?=$user_data['user_name']?>"><i class="text-secondary">https://logtrace.com/profile/<?=$user_data['user_name']?></i></a></p>
                 </div>
                 <div class="h4 p-3 mb-5 d-flex justify-content-evenly">
                   <a href="<?=$profile['fb_username']?>"><i class="bi bi-facebook"></i></a>
@@ -122,7 +122,7 @@ $displayPic = fetchDp($conn,$_GET['id']);
                   $showPost = $row;
                 ?>
                 <div>
-                  <h3><a href="view_blog.php?id=<?=$showPost['blog_id']?>" class="text-decoration-none text-secondary"><?=$showPost['title']?></a></h3>
+                  <h3><a href="view_blog.php?id=<?=$showPost['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$showPost['title']?></a></h3>
                   <?php
                   //fetch category of blog
                   $cat = $conn->prepare("SELECT * FROM category WHERE category_id=:cid");
@@ -150,11 +150,27 @@ $displayPic = fetchDp($conn,$_GET['id']);
 					</div>
             <div class="col-md-3">
 							<div class="p-3 mb-3 card bg-light text-dark">
-								<h5><i class="bi bi-people"></i>Top Writers</h5>
-                <?php foreach($blogs as $value): ?>
+								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
+                <?php
+                //fetch and display top five writers
+                  $writer = $conn->prepare("SELECT author, COUNT(author) as c from blog GROUP BY author ORDER BY COUNT(author) DESC LIMIT 3");
+                  $writer->execute();
+                  $topWriters = [];
+
+                  while ($row = $writer->fetch(PDO::FETCH_BOTH)){
+                      $topWriters = $row;
+                      ?>
                     <div class="card-body d-flex bd-highlight h4 mb-3">
                       <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 bd-highlight" alt="">
-                      <h5 class="p-2 bd-highlight"><?=$value['author']?></h5>
+                      <h5 class="p-2 bd-highlight"><?=$topWriters['author']?></h5>
+                    </div>
+    						<?php } ?>
+							</div>
+              <div class="p-3 mb-1 card bg-light text-dark">
+								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
+                  <?php foreach(array_slice($blogs, 0, 3) as $value): ?>
+                    <div class="card-body d-flex bd-highlight mb-1">
+                      <h5 style="font-size:17px" class="p-2 bd-highlight"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
                     </div>
     						<?php endforeach; ?>
 							</div>

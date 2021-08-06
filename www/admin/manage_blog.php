@@ -61,11 +61,11 @@ while($row=$fetch->fetch(PDO::FETCH_BOTH)){
             <div class="col-sm-12">
               <div class="card bg-light text-dark">
                 <div class="card-body">
-                  <div class="h3 mb-3 bg-warning text-center text-light p-3">
+                  <div class="h3 mb-3 alert alert-danger text-center p-3">
                     <i class="bi bi-person-square"></i>
                     <?= ucwords($_SESSION['admin_name'])?>&nbsp;&nbsp;|&nbsp;&nbsp;<?php echo "Your Id is ".$_SESSION['admin_id']?>
 
-                  </div class="card-title mb-3">
+                  </div>
                   <h3>Manage Blog</h3>
                   <div class="table-responsive-md">
                   <table class="table caption-top">

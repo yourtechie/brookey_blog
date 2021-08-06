@@ -9,6 +9,8 @@ $topWriters = fetchTopWriters($conn);
 $displayPic = fetchDp($conn,$blog['created_by']);
 $user_data = fetchUserDetails($conn,$blog['created_by']);
 $profile = fetchProfile($conn,$blog['created_by']);
+$dPic = fetchDp($conn,$_SESSION['user_id']);
+
 
 if(isset($_POST['send'])){
   //check if user is logged in
@@ -87,7 +89,12 @@ if(isset($_POST['send'])){
                 ?>
                 <div class="card bg-light text-dark">
                   <div class="mb-3 p-3 d-flex text-light" style="background-color: #953553">
-                    <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 justify-content-start" alt="">
+                    <?php if($dPic['dp_name'] < 1){ ?>
+                    <img src="../images/dummy.jpg" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
+                    <?php }else{ ?>
+                    <img src="../images/<?=$dPic['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
+                    <?php } ?>
+
                     <h3 id="user_name" class="align-self-center"><?= ucwords($_SESSION['name'])?></h3>
                   </div>
                   <div class="card-body">
@@ -128,7 +135,7 @@ if(isset($_POST['send'])){
                     }
                      ?>
                      <h5 class="mb-2"><i>Section: </i><?=$cate['category_name']?></h5>
-                    <p class="lead"><?=$blog['date_created']?></p>
+                    <p class="lead"><?=$blog['date_created']?> &nbsp; <?=$blog['time_created']?></p>
                     </div>
                     <hr>
                     <div class="mb-5">
@@ -151,8 +158,8 @@ if(isset($_POST['send'])){
                       </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                  <h3 class="mb-3">Comments (100)</h3>
+                <div class="mb-3 mt-4">
+                  <h3 class="mb-3">Comments</h3>
                   <div class="alert alert-danger">
                     <h5>Disclaimer</h5>
                     <p>Comments expressed here do not reflect the opinions of logtrace.com or any employee thereof.</p>
@@ -198,7 +205,7 @@ if(isset($_POST['send'])){
 							<div class="p-3 mb-3 card bg-light text-dark">
 								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
                 <?php
-                //fetch and display top three writers
+                //fetch and display top writers
                   $writer = $conn->prepare("SELECT author, COUNT(author) as c from blog GROUP BY author ORDER BY COUNT(author) DESC LIMIT 3");
                   $writer->execute();
                   $topWriters = [];
@@ -210,26 +217,7 @@ if(isset($_POST['send'])){
                       <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2" alt="">
                       <div class="">
                         <h5 class=""><?=$topWriters['author']?></h5>
-                    <?php
-                    //fetch username of d top three writers
-                    $writers = $conn->prepare("SELECT created_by, COUNT(created_by) as c from blog GROUP BY created_by ORDER BY COUNT(created_by) DESC LIMIT 3");
-                    $writers->execute();
-                    $writersId = [];
-
-                    while ($row = $writers->fetch(PDO::FETCH_BOTH)){
-                        $writersId = $row;
-
-                      $user = $conn->prepare("SELECT * FROM user WHERE user_id=:uid");
-                      $user->bindParam(":uid",$writersId['created_by']);
-                      $user->execute();
-                      $username = [];
-
-                      while ($row = $user->fetch(PDO::FETCH_ASSOC)) {
-                        $username = $row;
-                      ?>
-                        <p style="font-size:15px">@<?=$username['user_name']?></p>
-                        <?php } ?>
-                      <?php } ?>
+                        <!--<p style="font-size:15px">@<?=$username['user_name']?></p>-->
                       </div>
                     </div>
     						<?php  } ?>
@@ -264,23 +252,21 @@ if(isset($_POST['send'])){
                     <p class="card-text mb-3">
                       <?php
                       //check session and display info
-                      if (isset($_SESSION['name'])) {
+                      if(isset($_SESSION['name'])){
                         echo "Hi ".ucwords($_SESSION['name']);
-                      }else {
+                      }else{
                         echo "You are viewing this page as a guest. Login to gain more access to our features.";
                       }
                       ?>
                     </p>
                   </div>
                 </div>
-                <?php
-            		if(isset($_SESSION['user_id'])){
-            			?>
+                <?php if(isset($_SESSION['user_id'])){?>
                         <div class="mb3 px-3">
                         	<strong><h5 class="py-3"><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5></strong>
                           <p class="lead"><a href="action.php?logout=<?=$_SESSION['user_id']?>">Logout</a></p>
                         </div>
-                        <?php } else{ ?>
+                        <?php }else{ ?>
             			<div class="mb-3 px-3">
                     <p class="lead py-2"><a href="signup.php">Sign Up</a></p>
                     <p class="lead"><a href="login.php">Login</a></p>

@@ -4,7 +4,7 @@
  include '../includes/auth.php';
  include '../includes/functions.php';
 
- $user_data = fetchUserDetails($conn,$_SESSION['admin_id']);
+ $admin_data = fetchAdminDetails($conn,$_SESSION['admin_id']);
 
  if(isset($_POST['btn_submit'])){
  	$error=array();
@@ -27,7 +27,6 @@
        $img_type = $_FILES['image']['type']; //getting user uploaded img type.
        $img_size = $_FILES['image']['size']; //getting user uploaded img size.
        $temp_name = $_FILES['image']['tmp_name']; //temporary name used to save/move file in our folder.
-       $path="../images/".$new_img_name;
       if($img_type=="image/jpg" || $img_type=='image/jpeg' || $img_type=='image/png' || $img_type=='image/gif'){ //check file extension
       //if user uploads the valid extenstions stated.
           if($img_size < 5000000){//check file size 5MB
@@ -51,7 +50,7 @@
        $stmt = $conn->prepare("INSERT INTO blog VALUES(NULL, :tt, :au, :cat, :bd, :cb, :img, NOW(), NOW() )");
       	$data=array(
       		":tt"=>$_POST['title'],
-      		":au"=>$_SESSION['admin_name'],
+      		":au"=>$admin_data['admin_name'],
       		":cat"=>$_POST['category'],
       		":bd"=>$_POST['body'],
       		":cb"=>$_SESSION['admin_id'],
@@ -109,6 +108,15 @@
 
     <!--Boxes-->
 		<section class="ps-2 pe-2 mt-4 pt-5">
+      <?php if(isset($errorMsg)){?>
+              <div class="alert alert-danger">
+                <strong>WRONG ! <?php echo $errorMsg; ?></strong>
+              </div>
+              <?php } if(isset($insertMsg)){ ?>
+        <div class="alert alert-success">
+          <strong>SUCCESS ! <?php echo $insertMsg; ?></strong>
+        </div>
+          <?php } ?>
 				<div class="row text-center g-3">
 					<div class="col-md-3">
 						<div class="card bg-light text-dark">
@@ -128,7 +136,7 @@
                     <i class="bi bi-person-square"></i>
                   </div class="card-title mb-3">
                   <h3>Add Blog</h3>
-                  <p class="text-start" name="author">Author: <?=$_SESSION['admin_name']?></p>
+                  <p class="text-start" name="author">Author: <?=$admin_data['admin_name']." (Admin)"?></p>
                   <form class="" action="" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                       <input type="text" class="form-control" name="title" placeholder="Title">

@@ -14,8 +14,15 @@ if(isset($_POST['update'])){
     header("Location:index.php?error=Error 199!");
     exit();
   }
- $stmt = $conn->prepare("INSERT INTO profile VALUES(NULL, :bio, :lt, :fbu, :inu, :liu, :po, NOW(), NOW() )");
- $data=array(
+
+  //check if user has set up a profile, for insert or update info.
+  $statement=$conn->prepare("SELECT * FROM profile WHERE profile_owner =:po");
+  $statement->bindParam(":po",$_SESSION['user_id']);
+  $statement->execute();
+
+  if($statement->rowCount()<1){
+    $stmt = $conn->prepare("INSERT INTO profile VALUES(NULL, :bio, :lt, :fbu, :inu, :liu, :po, NOW(), NOW() )");
+    $data=array(
    ":bio"=>$_POST['bio'],
    ":lt"=>$_POST['location'],
    ":fbu"=>$_POST['fb-username'],
@@ -24,8 +31,21 @@ if(isset($_POST['update'])){
    ":po"=>$_SESSION['user_id']
    );
    $stmt->execute($data);
-   header("Location:index.php?message=Profile Updated Successfully");
- }
+   header("Location:index.php?message=Profile Set Successfully");
+ }else{
+   $stmt = $conn->prepare("UPDATE profile SET bio=:bio, location=:lt, fb_username=:fbu, in_username=:inu, li_username=:liu WHERE profile_owner =:po");
+   $data=array(
+  ":bio"=>$_POST['bio'],
+  ":lt"=>$_POST['location'],
+  ":fbu"=>$_POST['fb-username'],
+  ":inu"=>$_POST['in-username'],
+  ":liu"=>$_POST['li-username'],
+  ":po"=>$_SESSION['user_id']
+  );
+  $stmt->execute($data);
+  header("Location:index.php?message=Profile Updated Successfully");
+}
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -38,7 +58,7 @@ if(isset($_POST['update'])){
   </head>
   <body>
     <!--Navbar -->
-    <nav class="navbar navbar-expand-lg bg-danger navbar-dark text-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark text-light fixed-top" style="background-color: #953553">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">LOGtrace</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +90,7 @@ if(isset($_POST['update'])){
           </ul>
         </li>
       </ul>
-			<li class="btn btn-danger btn-md gx-4" id="logbtn" data-bs-toggle="modal" data-bs-target="#login">Login/Signup</li>
+      <li class="btn btn-white text-light btn-md gx-4" data-bs-toggle="modal" data-bs-target="#login">Account</li>
     </div>
   </div>
     </nav>
@@ -121,7 +141,7 @@ if(isset($_POST['update'])){
                     <h4>LinkedIn Username</h4>
                     <input type="text" class="form-control" name="li-username" value="<?=$profile['li_username']?>">
                   </div>
-                  <button type="submit" class="btn btn-danger mb-3"name="update">Update</button>
+                  <button type="submit" class="btn btn-transparent text-light" style="background-color: #953553" name="update">Update</button>
                 </form>
               </div>
 					</div>

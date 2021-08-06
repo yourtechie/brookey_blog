@@ -29,15 +29,32 @@ if (isset($_POST['img_upload'])){
       $errorMsg = "Please select an image file";
     }
     if(!isset($errorMsg)){
+      //check if user has set up a db, for insert or update dp.
+      $statement=$conn->prepare("SELECT * FROM dp_image WHERE dp_userId =:du");
+      $statement->bindParam(":du",$_SESSION['user_id']);
+      $statement->execute();
+
+      if($statement->rowCount()<1){
       $stmt = $conn->prepare("INSERT INTO dp_image VALUES(NULL, :dn, :du, NOW(), NOW() )");
       $data=array(
         ":dn"=>$new_img_name,
         ":du"=>$_SESSION['user_id']
         );
        if($stmt->execute($data)){
-         $insertMsg="Image Uploaded Successfully........"; //execute query success message
+         $insertMsg="DP Uploaded Successfully........"; //execute query success message
        }
      }
+   else{
+     $stmt = $conn->prepare("UPDATE dp_image SET dp_name=:dn WHERE dp_userId =:du");
+     $data=array(
+       ":dn"=>$new_img_name,
+       ":du"=>$_SESSION['user_id']
+       );
+      if($stmt->execute($data)){
+        $insertMsg="DP Changed Successfully........"; //execute query success message
+      }
+   }
+   }
   } catch (\Exception $e) {
     echo $e->getMessage();
   }

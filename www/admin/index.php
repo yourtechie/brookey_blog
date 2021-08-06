@@ -59,13 +59,10 @@ $blogs = fetchBlogs($conn);
             </div>
             <div class="col-md-6">
 							<?php foreach($blogs as $value): ?>
-              <div class="card bg-light text-dark">
-                <div class="card-body mb-3">
-                  <div class="h1">
+              <div class="card text-dark">
+                <div class="card-body mb-1">
 										<h3><a href="view_blog.php?id=<?=$value['blog_id']?>" style="font-weight:bold" class="text-decoration-none text-secondary"><?=$value['title']?></a></h3>
-                  </div class="card-title mb-3">
                   <h6 style="font-size:20px"><i class="bi bi-person-square"></i>&nbsp;&nbsp;<?=$value['author']?></h6>
-									<h4><?= $cat['category_name']?></h4>
                   <hr>
                   <div class="row">
                     <div class="col-md-8">
@@ -80,22 +77,32 @@ $blogs = fetchBlogs($conn);
 						<?php endforeach; ?>
 					</div>
           <div class="col-md-3">
-							<div class="text-center p-3 mb-3 bg-danger text-light">
-								<i class="bi bi-people"></i>
-								<h3>Top Writers</h3>
-							</div>
-						<?php foreach($blogs as $value): ?>
-              <div class="card bg-light text-dark">
-                <div class="card-body text-center">
-                  <div class="h1 mb-3">
-                    <i class="bi bi-people"></i>
-                  </div class="card-title mb-3">
-                  <h3><?=$value['author']?></h3>
-                  <p class="card-text">Profile Information</p>
-                </div>
-              </div>
-						<?php endforeach; ?>
-          </div>
+            <div class="p-3 mb-3 card bg-light text-dark">
+              <h5><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
+              <?php
+              //fetch and display top writers
+                $writer = $conn->prepare("SELECT author, COUNT(author) as c from blog GROUP BY author ORDER BY COUNT(author) DESC LIMIT 3");
+                $writer->execute();
+                $topWriters = [];
+
+                while ($row = $writer->fetch(PDO::FETCH_BOTH)){
+                    $topWriters = $row;
+                    ?>
+                  <div class="card-body d-flex h4 mb-3">
+                    <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 bd-highlight" alt="">
+                    <h5 class="p-2 bd-highlight"><?=$topWriters['author']?></h5>
+                  </div>
+              <?php } ?>
+            </div>
+            <div class="p-3 mb-1 card bg-light text-dark">
+              <h5><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
+                <?php foreach(array_slice($blogs, 0, 3) as $value): ?>
+                  <div class="card-body d-flex bd-highlight mb-1">
+                    <h5 style="font-size:17px" class="p-2 bd-highlight"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
+                  </div>
+              <?php endforeach; ?>
+            </div>
+        </div>
           </div>
       </section>
 

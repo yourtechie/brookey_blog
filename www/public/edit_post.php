@@ -88,15 +88,16 @@ if(empty($error)){
 	}else{
 		$errorMsg = "Please select an image file";
 	}
-	$statement=$conn->prepare("UPDATE blog SET title=:tt, author=:au, category=:cat, body=:bd, img=:img WHERE blog_id =:bid");
-	$statement->bindParam(":tt", $_POST['title']);
-	$statement->bindParam(":au", $user_data['first_name'].$user_data['last_name']);
-	$statement->bindParam(":cat", $_POST['category']);
-	$statement->bindParam(":bd", $_POST['body']);
-	$statement->bindParam(":img", $new_img_name);
-	$statement->bindParam(":bid", $blog_id);
-
-	$statement->execute();
+	$stmt=$conn->prepare("UPDATE blog SET title=:tt, author=:au, category=:cat, body=:bd, img=:img WHERE blog_id =:bid");
+	$data=array(
+		":tt"=>$_POST['title'],
+		":au"=>$user_data['first_name']." ".$user_data['last_name'],
+		":cat"=>$_POST['category'],
+		":bd"=>$_POST['body'],
+		":img"=>$new_img_name,
+		":bid"=>$blog_id
+		);
+	$stmt->execute($data);
 
 	header("Location:index.php?message=Blog Updated Successfully");
 	exit();

@@ -12,13 +12,19 @@ if(isset($_POST['submit'])){
   if(empty($_POST['email'])){
     $error['email']= "Enter Email";
     }else{
-			$statement=$conn->prepare("SELECT * FROM user WHERE email =:em");
-			$statement->bindParam(":em",$_POST['email']);
-			$statement->execute();
+    //if email is valid
+      if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+        $statement=$conn->prepare("SELECT * FROM user WHERE email =:em");
+  			$statement->bindParam(":em",$_POST['email']);
+  			$statement->execute();
 
-			if($statement->rowCount()>0){
-				$error['email'] = "Email already Exist";
-				}
+  			if($statement->rowCount()>0){
+  				$error['email'] = "Email already Exist";
+  				}
+      }else{
+        $error['email']= "This is not a valid email";
+      }
+
 
   if(empty($_POST['phone'])){
     $error['phone']= "Enter Your Phone Number";

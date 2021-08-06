@@ -81,3 +81,15 @@ function fetchTopWriters($dbconn){
   }
   return $topWriters;
 }
+
+function fetchAdminDetails($dbconn,$id){
+  $admin_details = $dbconn->prepare("SELECT * FROM admin WHERE admin_id=:aid");
+  $admin_details->bindParam(":aid",$id);
+  $admin_details->execute();
+  $admin_data = [];
+
+  while ($row = $admin_details->fetch(PDO::FETCH_BOTH)) {
+    $admin_data = $row;
+  }
+  return $admin_data;
+}
