@@ -4,6 +4,7 @@ include '../includes/user_auth.php';
 include '../includes/db.php';
 include '../includes/functions.php';
 
+$displayPic = fetchDp($conn,$_SESSION['user_id']);
 $user_data = fetchUserDetails($conn,$_SESSION['user_id']);
 
 if(isset($_GET['id'])){
@@ -142,10 +143,10 @@ if(empty($error)){
           <i class="bi bi-plus-lg px-2 text-warning"></i>
           Create</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="post.php">Post</a></li>
-            <li><a class="dropdown-item" href="#">Group Challenge</a></li>
+						<li><a class="dropdown-item" href="post.php">Post</a></li>
+            <li><a class="dropdown-item" href="#">Challenge</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">New Workspace</a></li>
+            <li><a class="dropdown-item" href="#">New Idea</a></li>
           </ul>
         </li>
       </ul>
@@ -172,15 +173,18 @@ if(empty($error)){
             <?php
     		}
     		?>
-          <div class="row text-center g-3">
+          <div class="row g-3">
             <div class="col-md-3 d-none d-sm-block">
               <div class="card bg-light text-dark">
-								<div class="mb-3 p-3 d-flex text-light" style="background-color: #953553">
-									<img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 justify-content-start" alt="">
-									<h3 id="user_name" class="align-self-center"><?= ucwords($_SESSION['name'])?></h3>
-								</div class="card-title">
+								<div class="mb-2 p-1 d-flex text-light" style="background-color: #953553">
+									<?php if($displayPic['dp_name'] < 1){ ?>
+									<img src="../images/dummy.jpg" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
+									<?php }else{ ?>
+									<img src="../images/<?=$displayPic['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
+									<?php } ?>
+									<h3 class="align-self-center"><?= ucwords($_SESSION['name'])?></h3>
+								</div>
                 <div class="card-body">
-                  <p class="lead card-text" id="user_board"><?php echo "Your Id is ".$_SESSION['user_id']?></p>
 									<h5><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5>
                 </div>
               </div>

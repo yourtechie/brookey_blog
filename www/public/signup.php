@@ -62,97 +62,102 @@ if(isset($_POST['submit'])){
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Signup</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
   </head>
   <body>
-    <div class="container">
-      <h1 class="text-center">Create New Account</h1>
-      <form action="signup.php" method="post">
-        <div class="mb-3">
-          <label for="firstname" class="col-form-label">
-            First Name:
-          </label>
-          <input type="text" class="form-control" name="firstname" validation="required">
-          <?php
-          if(isset($error['firstname'])){
-          	echo "<p style=color:red>".$error['firstname']."</p>";
-          	}
-          ?>
-        </div>
-        <div class="mb-3">
-          <label for="lastname" class="col-form-label">
-            Last Name:
-          </label>
-          <input type="text" class="form-control" name="lastname" validation="required">
-          <?php
-          if(isset($error['lastname'])){
-          	echo "<p style=color:red>".$error['lastname']."</p>";
-          	}
-          ?>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="col-form-label">
-            Email:
-          </label>
-          <input type="email" class="form-control" name="email">
-          <?php
-          if(isset($error['email'])){
-          	echo "<p style=color:red>".$error['email']."</p>";
-          	}
-          ?>
-        </div>
-        <div class="mb-3">
-          <label for="phone" class="col-form-label">
-            Phone Number:
-          </label>
-          <input type="text" class="form-control" name="phone" validation="required">
-          <?php
-          if(isset($error['phone'])){
-          	echo "<p style=color:red>".$error['phone']."</p>";
-          	}
-          ?>
-        </div>
-        <div class="mb-3">
-          <label for="lastname" class="col-form-label">
-            User Name:
-          </label>
-          <input type="text" class="form-control" name="username" validation="required">
-          <?php
-          if(isset($error['username'])){
-          	echo "<p style=color:red>".$error['username']."</p>";
-          	}
-          ?>
-        </div>
-        <div class="mb-3">
-          <label for="hash" class="col-form-label">
-            Password:
-          </label>
-          <input type="password" class="form-control" name="hash">
-          <?php
-          if(isset($error['hash'])){
-          	echo "<p style=color:red>".$error['hash']."</p>";
-          	}
-          ?>
-        </div>
-        <div class="mb-3">
-          <label for="confirm_hash" class="col-form-label">
-            Confirm Password:
-          </label>
-          <input type="password" class="form-control" name="confirm_hash">
-          <?php
-          if(isset($error['confirm_hash'])){
-          	echo "<p style=color:red>".$error['confirm_hash']."</p>";
-          	}
-          ?>
-        </div>
-      <button type="submit" name="submit" class="btn btn-transparent text-light" style="background-color: #953553">Sign Up</button>
-    </form>
-      <hr>
-      <p class="lead">Already have an account? <a href="login.php">Login</a></p>
-    </div>
+    <div class="container bg-light pt-3">
+			<div class="container-fluid">
+        <h3 class="fw-bold" style="color: #953553">Create LogTrace Account</h3>
+        <hr>
+        <form action="signup.php" method="post">
+          <div class="mb-3">
+            <label for="firstname" class="col-form-label">
+              First Name:
+            </label>
+            <input type="text" class="form-control" name="firstname" validation="required">
+            <?php
+            if(isset($error['firstname'])){
+            	echo "<p style=color:red>".$error['firstname']."</p>";
+            	}
+              ?>
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="col-form-label">
+              Last Name:
+            </label>
+            <input type="text" class="form-control" name="lastname" validation="required">
+            <?php
+            if(isset($error['lastname'])){
+            	echo "<p style=color:red>".$error['lastname']."</p>";
+            	}
+            ?>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="col-form-label">
+              Email:
+            </label>
+            <input type="email" class="form-control" name="email">
+            <?php
+            if(isset($error['email'])){
+            	echo "<p style=color:red>".$error['email']."</p>";
+            	}
+            ?>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="col-form-label">
+              Phone Number:
+            </label>
+            <input type="text" class="form-control" name="phone" validation="required">
+            <?php
+            if(isset($error['phone'])){
+            	echo "<p style=color:red>".$error['phone']."</p>";
+            	}
+            ?>
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="col-form-label">
+              User Name:
+            </label>
+            <input type="text" class="form-control" name="username" validation="required">
+            <?php
+            if(isset($error['username'])){
+            	echo "<p style=color:red>".$error['username']."</p>";
+            	}
+            ?>
+          </div>
+          <div class="mb-3">
+            <label for="hash" class="col-form-label">
+              Password:
+            </label>
+            <input type="password" class="form-control" name="hash">
+            <?php
+            if(isset($error['hash'])){
+            	echo "<p style=color:red>".$error['hash']."</p>";
+            	}
+            ?>
+          </div>
+          <div class="mb-3">
+            <label for="confirm_hash" class="col-form-label">
+              Confirm Password:
+            </label>
+            <input type="password" class="form-control" name="confirm_hash">
+            <?php
+            if(isset($error['confirm_hash'])){
+            	echo "<p style=color:red>".$error['confirm_hash']."</p>";
+            	}
+            ?>
+          </div>
+          <div class="text-center">
+            <button type="submit" name="submit" class="btn btn-transparent text-light" style="background-color: #953553">Sign Up</button>
+          </div>
+      </form>
+        <hr>
+        <p class="lead">Already have an account? <a href="login.php">Login</a></p>
+      </div>
 
-    <script type="text/javascript"></script>
+      </div>
   </body>
 </html>

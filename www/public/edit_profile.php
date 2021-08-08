@@ -84,9 +84,9 @@ if(isset($_POST['update'])){
           Create</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="post.php">Post</a></li>
-            <li><a class="dropdown-item" href="#">Group Challenge</a></li>
+            <li><a class="dropdown-item" href="#">Challenge</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">New Workspace</a></li>
+            <li><a class="dropdown-item" href="#">New Idea</a></li>
           </ul>
         </li>
       </ul>
