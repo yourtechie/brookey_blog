@@ -24,10 +24,11 @@ if(isset($_POST['send'])){
     $error['comment'] = "Please enter your comment";
     }
   if(empty($error)){
-    $stmt = $conn->prepare("INSERT INTO comment VALUES(NULL, :cm, :bid, :po, NOW(), NOW() )");
+    $stmt = $conn->prepare("INSERT INTO comment VALUES(NULL, :cm, :bid, :po, :pid, NOW(), NOW() )");
     $stmt->bindParam(":cm", $_POST['comment']);
     $stmt->bindParam(":bid", $_GET['id']);
     $stmt->bindParam(":po", $_SESSION['user_name']);
+    $stmt->bindParam(":pid", $_SESSION['user_id']);
     $stmt->execute();
     }
   }
@@ -120,7 +121,7 @@ if(isset($_POST['send'])){
                     </div>
                     <div class="h1 text-center card-title">
                     <h3 class="mb-2 fw-bold"><?=$blog['title']?></h3>
-                    <h5 class="mb-2"><i>Written by: </i><?=ucwords($blog['author'])?></h5>
+                    <h5 class="mb-2"><i class="text-warning">Written by: </i><?=ucwords($blog['author'])?></h5>
                     <?php
                     //fetch category of blog
                     $cat = $conn->prepare("SELECT * FROM category WHERE category_id=:cid");
@@ -132,26 +133,25 @@ if(isset($_POST['send'])){
                       $cate = $row;
                     }
                      ?>
-                     <h5 class="mb-2"><i>Section: </i><?=$cate['category_name']?></h5>
-                    <p class="lead"><?=$blog['date_created']?> &nbsp; <?=$blog['time_created']?></p>
+                     <h5 class="mb-2"><i class="text-warning">Section: </i><?=$cate['category_name']?></h5>
+                    <p class="text-secondary pe-3" style="font-size:18px"><?=$blog['date_created']?> &nbsp; <?=$blog['time_created']?></p>
                     </div>
                     <hr>
                     <div class="mb-5">
                       <p class="card-text py-2 mb-1"><?=$blog['body']?></p>
                     </div>
-                    <div class="row mt-3">
-                      <div class="col-md-3"></div>
-                      <div class="col-md-3"></div>
-                      <div class="col-md-4 mb-3 text-center d-block w-50">
+                    <hr>
+                    <div class="mt-3">
+                      <div class="mb-3 text-center">
                         <h4 class="mb-3 fw-bold">About Author</h4>
                         <img src="../images/<?=$displayPic['dp_name']?>" width="100px" height="100px" class="border border-white border-3" alt="">
                         <h5><?=ucwords($blog['author'])?></h5>
                         <p class="lead"><?=$profile['bio']?></p>
-                        <div class="h4 p-3 mb-5 d-flex justify-content-evenly">
-                          <a href="<?=$profile['fb_username']?>"><i class="bi bi-facebook"></i></a>
-                          <a href="<?=$profile['in_username']?>"><i class="bi bi-instagram text-danger"></i></a>
-                          <a href="<?=$profile['li_username']?>"><i class="bi bi-linkedin text-info"></i></a>
-                          <a href="whatsappme/<?=$user_data['phone_number']?>"><i class="bi bi-whatsapp text-success"></i></a>
+                        <div class="h4 p-3 mb-5 d-flex justify-content-center">
+                          <a href="http://www.facebook.com/<?=$profile['fb_username']?>"><i class="bi bi-facebook pe-5"></i></a>
+                          <a href="https://www.instagram.com/<?=$profile['in_username']?>"><i class="bi bi-instagram pe-5 text-danger"></i></a>
+                          <a href="https://www.linkedin.com/in/<?=$profile['li_username']?>"><i class="bi bi-linkedin pe-5 text-info"></i></a>
+                          <a href="https://wa.me/<?=$user_data['phone_number']?>"><i class="bi bi-whatsapp text-success"></i></a>
                         </div>
                       </div>
                     </div>
@@ -174,13 +174,13 @@ if(isset($_POST['send'])){
 
                   ?>
                 <div class="mb-2 bg-light">
-                  <div class="alert alert-success">
+                  <div class="alert alert-success d-flex justify-content-between">
                     <p><?=$comment['comment']?></p>
                   </div>
                   <div class="d-flex justify-content-end">
                     <h6 class="px-3"><i>posted by </i>@<?=$comment['poster']?></h6>
-                    <p class="px-3"><?=$comment['date_created']?></p>
-                    <p class="px-3"><?=$comment['time_created']?></p>
+                    <p class="px-2"><?=$comment['date_created']?></p>
+                    <p class="px-2"><?=$comment['time_created']?></p>
                   </div>
                 </div>
                 <?php   } ?>
@@ -200,34 +200,44 @@ if(isset($_POST['send'])){
                 </div>
             </div>
             <div class="col-md-3">
-							<div class="p-3 mb-3 card bg-light text-dark">
-								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
+              <div class="p-2 mb-1 card bg-light text-dark">
+              <div class="p-3 mb-3 card bg-light text-center text-dark">
+                <h5 style="color: #953553" class="fw-bold"><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
+                </div>
                 <?php
                 //fetch and display top writers
-                  $writer = $conn->prepare("SELECT author, COUNT(author) as c from blog GROUP BY author ORDER BY COUNT(author) DESC LIMIT 3");
+                  $writer = $conn->prepare("SELECT created_by, COUNT(created_by) as c from blog GROUP BY created_by ORDER BY COUNT(created_by) DESC LIMIT 5");
                   $writer->execute();
                   $topWriters = [];
 
                   while ($row = $writer->fetch(PDO::FETCH_BOTH)){
                       $topWriters = $row;
                       ?>
-                    <div class="card-body d-flex h4 mb-1">
-                      <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2" alt="">
-                      <div class="">
-                        <h5 class=""><?=$topWriters['author']?></h5>
-                        <!--<p style="font-size:15px">@<?=$username['user_name']?></p>-->
+                    <div class="row card-body d-flex justify-content-around p-1">
+                      <?php
+                      $writer_data = fetchWriters($conn,$topWriters['created_by']);
+                      $writer_img = fetchImg($conn,$topWriters['created_by']);
+                      ?>
+                      <div class="col-3">
+                        <img src="../images/<?=$writer_img['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="No Available Image">
+                      </div>
+                      <div class="col-9 pt-2">
+                        <a href="view_profile.php?id=<?=$topWriters['created_by']?>" style="font-size:18px;font-weight:bold" class="text-secondary text-decoration-none"><?=$writer_data['first_name']?> <?=$writer_data['last_name']?></a>
+                        <p><i>@<?=$writer_data['user_name']?></i></p>
                       </div>
                     </div>
-    						<?php  } ?>
-							</div>
-              <div class="p-3 mb-1 card bg-light text-dark">
-								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
-                  <?php foreach(array_slice($blogs, 0, 3) as $value): ?>
-                    <div class="card-body d-flex bd-highlight mb-1">
-                      <h5 style="font-size:17px" class="p-2 bd-highlight"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
+                <?php } ?>
+              </div>
+              <div class="p-2 mb-1 card bg-light text-dark">
+                <div class="p-3 card bg-light text-center text-dark">
+                  <h5 style="color: #953553" class="fw-bold"><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
+                </div>
+                  <?php foreach(array_slice($blogs, 0, 5) as $value): ?>
+                    <div class="card-body mb-1 p-3">
+                      <h5 style="font-size:17px"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
                     </div>
-    						<?php endforeach; ?>
-							</div>
+                <?php endforeach; ?>
+              </div>
           </div>
           </div>
       </section>

@@ -97,19 +97,19 @@ $displayPic = fetchDp($conn,$_GET['id']);
                 </div>
                 <div class="mb-3 text-center">
                   <h6>Share your profile:</h6>
-                  <p class="lead"><a  class="text-decoration-none" href="https://logtrace.com/profile/<?=$user_data['user_name']?>"><i class="text-secondary">https://logtrace.com/profile/<?=$user_data['user_name']?></i></a></p>
+                  <p class="lead"><a  class="text-decoration-none" href="view_profile.php?id=<?=$user_data['user_id']?>"><i class="text-secondary">Click to view profile</i></a></p>
                 </div>
                 <div class="h4 p-3 mb-5 d-flex justify-content-evenly">
-                  <a href="<?=$profile['fb_username']?>"><i class="bi bi-facebook"></i></a>
-                  <a href="<?=$profile['in_username']?>"><i class="bi bi-instagram text-danger"></i></a>
-                  <a href="<?=$profile['li_username']?>"><i class="bi bi-linkedin text-info"></i></a>
-                  <a href="whatsappme/<?=$user_data['phone_number']?>"><i class="bi bi-whatsapp text-success"></i></a>
+                  <a href="http://www.facebook.com/<?=$profile['fb_username']?>"><i class="bi bi-facebook"></i></a>
+                  <a href="https://www.instagram.com/<?=$profile['in_username']?>"><i class="bi bi-instagram text-danger"></i></a>
+                  <a href="https://www.linkedin.com/in/<?=$profile['li_username']?>"><i class="bi bi-linkedin text-info"></i></a>
+                  <a href="https://wa.me/<?=$user_data['phone_number']?>"><i class="bi bi-whatsapp text-success"></i></a>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="container">
-                <h3 class="text-center fw-bold">My Posts</h3>
+                <h3 class="text-center fw-bold pt-3" style="color: #953553">My Posts</h3>
                 <hr>
                 <?php
                 //fetch all the posts made by user
@@ -121,25 +121,27 @@ $displayPic = fetchDp($conn,$_GET['id']);
                 while ($row = $post->fetch(PDO::FETCH_BOTH)) {
                   $showPost = $row;
                 ?>
-                <div>
-                  <h3><a href="view_blog.php?id=<?=$showPost['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$showPost['title']?></a></h3>
-                  <?php
-                  //fetch category of blog
-                  $cat = $conn->prepare("SELECT * FROM category WHERE category_id=:cid");
-                  $cat->bindParam(":cid",$showPost['category']);
-                  $cat->execute();
-                  $cate = [];
+                <div class="row-sm d-flex mb-3">
+                  <div class="col-md-6">
+                    <h3><a href="view_blog.php?id=<?=$showPost['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$showPost['title']?></a></h3>
+                    <?php
+                    //fetch category of blog
+                    $cat = $conn->prepare("SELECT * FROM category WHERE category_id=:cid");
+                    $cat->bindParam(":cid",$showPost['category']);
+                    $cat->execute();
+                    $cate = [];
 
-                  while ($row = $cat->fetch(PDO::FETCH_BOTH)) {
-                    $cate = $row;
-                  }
-                   ?>
-                   <h5><i>Section: </i><?=$cate['category_name']?></h5>
-                  <p><?=$showPost['date_created']?></p>
-                  <div class="col-sm-4 d-flex">
+                    while ($row = $cat->fetch(PDO::FETCH_BOTH)){
+                      $cate = $row;
+                    }
+                     ?>
+                     <h5><i class="text-warning">Section: </i><?=$cate['category_name']?></h5>
+                    <p><?=$showPost['date_created']?></p>
+                  </div>
+                  <div class="col-4">
                     <img src="../images/<?=$showPost['img']?>" style="height:100px; width:100px;" class="d-flex d-sm-block order ms-auto p-2 bd-highlight image-fluid" alt="No Available Image">
                   </div>
-                  <div class="d-flex justify-content-end">
+                  <div class="col-2 d-flex justify-content-around py-5">
                     <a href="action.php?del=<?= $showPost['blog_id']?>" class="mx-4 text-danger" onclick="return confirm('Are you sure you want to delete this post?');" title="Delete"><i class="bi bi-trash"></i></a>
                     <a href="edit_post.php?<?=$showPost['title']?>%<?=$user_data['user_name']?>&uid=<?=$_SESSION['user_id']?>&id=<?= $showPost['blog_id']?>" class="text-success" title="Edit"><i class="bi bi-pencil-square"></i></a>
                   </div>
@@ -148,33 +150,46 @@ $displayPic = fetchDp($conn,$_GET['id']);
                 <?php } ?>
               </div>
 					</div>
-            <div class="col-md-3">
-							<div class="p-3 mb-3 card bg-light text-dark">
-								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
-                <?php
-                //fetch and display top five writers
-                  $writer = $conn->prepare("SELECT author, COUNT(author) as c from blog GROUP BY author ORDER BY COUNT(author) DESC LIMIT 3");
-                  $writer->execute();
-                  $topWriters = [];
+          <div class="col-md-3">
+            <div class="p-2 mb-1 card bg-light text-dark">
+            <div class="p-3 mb-3 card bg-light text-center text-dark">
+              <h5 style="color: #953553" class="fw-bold"><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
+              </div>
+              <?php
+              //fetch and display top writers
+                $writer = $conn->prepare("SELECT created_by, COUNT(created_by) as c from blog GROUP BY created_by ORDER BY COUNT(created_by) DESC LIMIT 5");
+                $writer->execute();
+                $topWriters = [];
 
-                  while ($row = $writer->fetch(PDO::FETCH_BOTH)){
-                      $topWriters = $row;
-                      ?>
-                    <div class="card-body d-flex bd-highlight h4 mb-3">
-                      <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 bd-highlight" alt="">
-                      <h5 class="p-2 bd-highlight"><?=$topWriters['author']?></h5>
+                while ($row = $writer->fetch(PDO::FETCH_BOTH)){
+                    $topWriters = $row;
+                    ?>
+                  <div class="row card-body d-flex justify-content-around p-1">
+                    <?php
+                    $writer_data = fetchWriters($conn,$topWriters['created_by']);
+                    $writer_img = fetchImg($conn,$topWriters['created_by']);
+                    ?>
+                    <div class="col-3">
+                      <img src="../images/<?=$writer_img['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="No Available Image">
                     </div>
-    						<?php } ?>
-							</div>
-              <div class="p-3 mb-1 card bg-light text-dark">
-								<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
-                  <?php foreach(array_slice($blogs, 0, 3) as $value): ?>
-                    <div class="card-body d-flex bd-highlight mb-1">
-                      <h5 style="font-size:17px" class="p-2 bd-highlight"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
+                    <div class="col-9 pt-2">
+                      <a href="view_profile.php?id=<?=$topWriters['created_by']?>" style="font-size:18px;font-weight:bold" class="text-secondary text-decoration-none"><?=$writer_data['first_name']?> <?=$writer_data['last_name']?></a>
+                      <p><i>@<?=$writer_data['user_name']?></i></p>
                     </div>
-    						<?php endforeach; ?>
-							</div>
-          </div>
+                  </div>
+              <?php } ?>
+            </div>
+            <div class="p-2 mb-1 card bg-light text-dark">
+              <div class="p-3 card bg-light text-center text-dark">
+                <h5 style="color: #953553" class="fw-bold"><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
+              </div>
+                <?php foreach(array_slice($blogs, 0, 5) as $value): ?>
+                  <div class="card-body mb-1 p-3">
+                    <h5 style="font-size:17px"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
+                  </div>
+              <?php endforeach; ?>
+            </div>
+        </div>
 				</div>
       </section>
 
@@ -187,47 +202,26 @@ $displayPic = fetchDp($conn,$_GET['id']);
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
+              <div class="text-center p-0 text-dark">
+                <h3 style="color: #953553">Hi <?=$_SESSION['name']?></h3>
+              </div class="card-title mb-3">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="col-md-12">
                 <div class="card bg-light text-dark">
-                  <div class="card-body text-center">
-                    <p class="card-text mb-3">
-                      <?php
-                      //check session and display info
-                      if (isset($_SESSION['name'])) {
-                        echo "Hi ".ucwords($_SESSION['name']);
-                      }else {
-                        echo "You are viewing this page as a guest. Login to gain more access to our features.";
-                      }
-                      ?>
-                    </p>
-                  </div>
+                  <div class="card-body">
+                    <div class="mb3 px-3">
+                      <strong><h5 class="py-3"><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5></strong>
+                      <p class="lead"><a href="action.php?logout=<?=$_SESSION['user_id']?>">Logout</a></p>
+                    </div>
                 </div>
-                <?php
-            		if(isset($_SESSION['user_id'])){
-            			?>
-                        <div class="mb3 px-3">
-                        	<strong><h5 class="py-3"><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5></strong>
-                          <p class="lead"><a href="action.php?logout=<?=$_SESSION['user_id']?>">Logout</a></p>
-                        </div>
-                        <?php } else{ ?>
-            			<div class="mb-3 px-3">
-                    <p class="lead py-2"><a href="signup.php">Sign Up</a></p>
-                    <p class="lead"><a href="login.php">Login</a></p>
-            			</div>
-                    <?php } ?>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-
+    </div>
     <script src="script.js"></script>
-    <script type="text/javascript">
-
-    </script>
 </body>
 </html>

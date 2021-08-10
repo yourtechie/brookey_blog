@@ -123,7 +123,7 @@ $blogs = fetchBlogs($conn);
             <div class="modal-header">
               <div class="col-12 text-center h1 p-0 mb-3 bg-danger text-light">
                 <i class="bi bi-person"></i>
-                <h3 id="admin_info">Guest</h3>
+                <h3 id="admin_info"><?= ucwords($_SESSION['admin_name'])?></h3>
               </div class="card-title mb-3">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -131,11 +131,7 @@ $blogs = fetchBlogs($conn);
               <div class="col-md-12">
                 <div class="card bg-light text-dark">
                   <div class="card-body text-center">
-
-                    <p class="card-text" id="admin_dash">You are not signed in. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <p class="lead"><a href="signup.php" class="">Sign Up</a></p>
-                    <hr>
-                    <p class="lead"><a href="login.php" class="">Login</a></p>
+                    <p class="lead"><a href="action.php?logout=<?=$_SESSION['admin_id']?>">Logout</a></p>
                   </div>
                 </div>
               </div>

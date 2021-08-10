@@ -157,28 +157,26 @@ if(isset($_POST['update'])){
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <div class="col-12 text-center h1 p-0 mb-3 bg-danger text-light">
-                <i class="bi bi-person"></i>
-                <h3 id="admin_info">Guest</h3>
+              <div class="text-center p-0 text-dark">
+                <h3 style="color: #953553">Hi <?=$_SESSION['name']?></h3>
               </div class="card-title mb-3">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="col-md-12">
                 <div class="card bg-light text-dark">
-                  <div class="card-body text-center">
-                    <p class="card-text" id="user_dash">You are not signed in. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <p class="lead"><a href="signup.php" class="">Sign Up</a></p>
-                    <hr>
-                    <p class="lead"><a href="login.php" class="">Login</a></p>
-                  </div>
+                  <div class="card-body">
+                    <div class="mb3 px-3">
+                      <strong><h5 class="py-3"><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5></strong>
+                      <p class="lead"><a href="action.php?logout=<?=$_SESSION['user_id']?>">Logout</a></p>
+                    </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

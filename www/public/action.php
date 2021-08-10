@@ -5,7 +5,7 @@ if(isset($_GET['del'])){
   $del = $conn->prepare("DELETE FROM blog WHERE blog_id=:bid");
   $del->bindParam(":bid",$id);
   $del->execute();
-  header('location:index.php');
+  header('location:index.php?message=Post Deleted Successfully');
   exit();
 }
 

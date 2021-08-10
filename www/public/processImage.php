@@ -43,8 +43,7 @@ if (isset($_POST['img_upload'])){
        if($stmt->execute($data)){
          $insertMsg="DP Uploaded Successfully........"; //execute query success message
        }
-     }
-   else{
+     }else{
      $stmt = $conn->prepare("UPDATE dp_image SET dp_name=:dn WHERE dp_userId =:du");
      $data=array(
        ":dn"=>$new_img_name,

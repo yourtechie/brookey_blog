@@ -93,3 +93,27 @@ function fetchAdminDetails($dbconn,$id){
   }
   return $admin_data;
 }
+
+function fetchWriters($dbconn,$id){
+  $writer_details = $dbconn->prepare("SELECT * FROM user WHERE user_id=:uid");
+  $writer_details->bindParam(":uid",$id);
+  $writer_details->execute();
+  $writer_data = [];
+
+  while ($row = $writer_details->fetch(PDO::FETCH_BOTH)){
+      $writer_data = $row;
+  }
+  return $writer_data;
+}
+
+function fetchImg($dbconn,$id){
+  $writer_image = $dbconn->prepare("SELECT * FROM dp_image WHERE dp_userId=:did");
+  $writer_image->bindParam(":did",$id);
+  $writer_image->execute();
+  $writer_img = [];
+
+  while ($row = $writer_image->fetch(PDO::FETCH_BOTH)){
+      $writer_img = $row;
+  }
+  return $writer_img;
+}

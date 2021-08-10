@@ -96,50 +96,69 @@ while($row=$fetch->fetch(PDO::FETCH_BOTH)){
             </div>
 						<div class="col-md-6">
 							<?php foreach($blogs as $value): ?>
-							<div class="card text-dark">
-								<div class="card-body mb-1">
-										<h3><a href="view_blog.php?id=<?=$value['blog_id']?>" style="font-weight:bold" class="text-decoration-none text-secondary"><?=$value['title']?></a></h3>
-									<h6 style="font-size:20px"><i class="bi bi-person-square"></i>&nbsp;&nbsp;<?=$value['author']?></h6>
-									<hr>
-									<div class="row">
-										<div class="col-md-8">
-											<p class="card-text mb-3" style="font-size:20px"><?= substr($value['body'],0,100)." . . ."?></p>
-										</div>
-										<div class="col-sm-4 d-flex">
-											<img src="../images/<?=$value['img']?>" style="height:100px; width:100px;" class="d-flex d-sm-block order ms-auto p-2 bd-highlight image-fluid" alt="No Available Image">
-										</div>
-									</div>
-								</div>
-							</div>
+              <div class="card text-dark">
+                <div class="card-body mb-1">
+									<div>
+                    <h4><a href="view_blog.php?id=<?=$value['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$value['title']?></a></h4>
+                    <h6 style="font-size:18px;color:grey;font-weight:bold"><i class="bi bi-person-circle text-warning me-2"></i><i><?=$value['author']?></i></h6>
+                  </div>
+                  <hr>
+                  <div class="row-sm d-flex justify-content-between">
+                    <div class="col-md-8">
+                      <p class="card-text mb-3" style="font-size:20px"><?= substr($value['body'],0,100)." . . ."?></p>
+                    </div>
+                    <div class="col-sm-4 d-flex">
+                      <?php if ($value['img'] >= 1){ ?>
+                      <img src="../images/<?=$value['img']?>" style="height:100px; width:100px;" class="d-flex d-sm-block order ms-auto p-2 bd-highlight image-fluid" alt="No Available Image">
+                    <?php }else{ ?>
+                      <p></p>
+                      <?php } ?>
+                    </div>
+                  </div>
+                </div>
+              </div>
 						<?php endforeach; ?>
 					</div>
 					<div class="col-md-3">
-						<div class="p-3 mb-3 card bg-light text-dark">
-							<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
-							<?php
-							//fetch and display top writers
-								$writer = $conn->prepare("SELECT author, COUNT(author) as c from blog GROUP BY author ORDER BY COUNT(author) DESC LIMIT 3");
-								$writer->execute();
-								$topWriters = [];
+						<div class="p-2 mb-1 card bg-light text-dark">
+            <div class="p-3 mb-3 card bg-light text-center text-dark">
+              <h5 style="color: #953553" class="fw-bold"><i class="bi bi-people"></i>&nbsp;&nbsp;Top Writers</h5>
+              </div>
+              <?php
+              //fetch and display top writers
+                $writer = $conn->prepare("SELECT created_by, COUNT(created_by) as c from blog GROUP BY created_by ORDER BY COUNT(created_by) DESC LIMIT 5");
+                $writer->execute();
+                $topWriters = [];
 
-								while ($row = $writer->fetch(PDO::FETCH_BOTH)){
-										$topWriters = $row;
-										?>
-									<div class="card-body d-flex bd-highlight h4 mb-3">
-										<img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 bd-highlight" alt="">
-										<h5 class="p-2 bd-highlight"><?=$topWriters['author']?></h5>
-									</div>
-							<?php } ?>
-						</div>
-						<div class="p-3 mb-1 card bg-light text-dark">
-							<h5><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
-								<?php foreach(array_slice($blogs, 0, 3) as $value): ?>
-									<div class="card-body d-flex bd-highlight mb-1">
-										<h5 style="font-size:17px" class="p-2 bd-highlight"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
-									</div>
-							<?php endforeach; ?>
-						</div>
-				</div>
+                while ($row = $writer->fetch(PDO::FETCH_BOTH)){
+                    $topWriters = $row;
+                    ?>
+                  <div class="row card-body d-flex justify-content-around p-1">
+                    <?php
+                    $writer_data = fetchWriters($conn,$topWriters['created_by']);
+                    $writer_img = fetchImg($conn,$topWriters['created_by']);
+                    ?>
+                    <div class="col-3">
+                      <img src="../images/<?=$writer_img['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="No Available Image">
+                    </div>
+                    <div class="col-9 pt-2">
+                      <a href="view_profile.php?id=<?=$topWriters['created_by']?>" style="font-size:18px;font-weight:bold" class="text-secondary text-decoration-none"><?=$writer_data['first_name']?> <?=$writer_data['last_name']?></a>
+                      <p><i>@<?=$writer_data['user_name']?></i></p>
+                    </div>
+                  </div>
+              <?php } ?>
+            </div>
+            <div class="p-2 mb-1 card bg-light text-dark">
+              <div class="p-3 card bg-light text-center text-dark">
+                <h5 style="color: #953553" class="fw-bold"><i class="bi bi-people"></i>&nbsp;&nbsp;Recent Posts</h5>
+              </div>
+                <?php foreach(array_slice($blogs, 0, 5) as $value): ?>
+                  <div class="card-body mb-1 p-3">
+                    <h5 style="font-size:17px"><a href="view_blog.php?id=<?=$value['blog_id']?>" class="text-secondary"><?=$value['title']?></a></h5>
+                  </div>
+              <?php endforeach; ?>
+            </div>
+        </div>
 				</div>
       </section>
 

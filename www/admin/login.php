@@ -80,10 +80,7 @@ if(empty($error)){
           ?>
         </div>
       <input type="submit" name="submit" class="btn btn-danger" value="Login"/>
-      <hr>
-      <p class="lead">Don't have an account yet? <a href="signup.php">Sign Up</a></p>
     </form>
   </div>
-    <script type="text/javascript"></script>
   </body>
 </html>

@@ -136,7 +136,7 @@
                     <i class="bi bi-person-square"></i>
                   </div class="card-title mb-3">
                   <h3>Add Blog</h3>
-                  <p class="text-start" name="author">Author: <?=$admin_data['admin_name']." (Admin)"?></p>
+                  <p class="text-start" name="author">Author: <?=$admin_data['admin_name']?></p>
                   <form class="" action="" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                       <input type="text" class="form-control" name="title" placeholder="Title">

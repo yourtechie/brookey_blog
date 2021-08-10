@@ -1,9 +1,14 @@
 <?php
 session_start();
 include '../includes/db.php';
+include '../includes/user_auth.php';
 include '../includes/functions.php';
-$displayPic = fetchDp($conn,$_SESSION['user_id']);
+include_once('processImage.php');
+
 $blogs = fetchBlogs($conn);
+$user_data = fetchUserDetails($conn,$_GET['id']);
+$profile = fetchProfile($conn,$_GET['id']);
+$displayPic = fetchDp($conn,$_GET['id']);
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -13,8 +18,7 @@ $blogs = fetchBlogs($conn);
     <title>LogTrace | Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    </head>
+  </head>
   <body>
     <!--Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark text-light fixed-top" style="background-color: #953553">
@@ -43,9 +47,9 @@ $blogs = fetchBlogs($conn);
           Create</a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="post.php">Post</a></li>
-            <li><a class="dropdown-item" href="#">Challenge<i> (Unavailable)</i></a></li>
+            <li><a class="dropdown-item" href="#">Challenge</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">New Idea<i> (Unavailable)</i></a></li>
+            <li><a class="dropdown-item" href="#">New Idea</a></li>
           </ul>
         </li>
       </ul>
@@ -55,83 +59,80 @@ $blogs = fetchBlogs($conn);
     </nav>
     <!--Boxes-->
       <section class="ps-2 pe-2 mt-4 pt-5">
-          <div class="row g-3">
-            <?php
-        		if(isset($errorMsg)){
-        			?>
-                    <div class="alert alert-danger">
-                    	<strong>WRONG ! <?php echo $errorMsg; ?></strong>
-                    </div>
-                    <?php }if(isset($insertMsg)){ ?>
-        			<div class="alert alert-success">
-        				<strong>SUCCESS ! <?php echo $insertMsg; ?></strong>
-        			</div>
-                <?php } ?>
-
-          <?php if(isset($_GET['message'])){ ?>
-                <div class="alert alert-success">
-                  <strong>SUCCESS! <?php echo $_GET['message'];?></strong>
-                </div>
-                <?php } if(isset($_GET['error'])){ ?>
+        <?php if(isset($errorMsg)){?>
                 <div class="alert alert-danger">
-          				<strong>WRONG! <?php echo $_GET['error']; ?></strong>
-          			</div>
+                	<strong>WRONG ! <?php echo $errorMsg; ?></strong>
+                </div>
+                <?php } if(isset($insertMsg)){ ?>
+    			<div class="alert alert-success">
+    				<strong>SUCCESS ! <?php echo $insertMsg; ?></strong>
+    			</div>
+            <?php } ?>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <div class="card bg-light pt-3 text-dark">
+                <div class="h1 mb-4 text-center">
+                  <?php if($displayPic['dp_name'] < 1){ ?>
+                  <img src="../images/dummy.jpg" width="120px" height="120px" onClick="triggerClick()" class="border border-white border-3" id="profileDisplay" alt="">
+                  <?php }else{ ?>
+                  <img src="../images/<?=$displayPic['dp_name']?>" width="120px" height="120px" onClick="triggerClick()" class="border border-white border-3" id="profileDisplay" alt="">
                   <?php } ?>
-
-              <div class="col-md-3">
-              <?php
-              if(isset($_SESSION['user_id'])){
-                ?>
-                <div class="card bg-light text-dark">
-                  <div class="mb-2 p-1 d-flex text-light" style="background-color: #953553">
-										<?php if($displayPic['dp_name'] < 1){ ?>
-										<img src="../images/dummy.jpg" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
-										<?php }else{ ?>
-										<img src="../images/<?=$displayPic['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
-										<?php } ?>
-										<h3 class="align-self-center"><?= ucwords($_SESSION['name'])?></h3>
-                  </div>
-                  <div class="card-body">
-                    <h5><a href="profile.php?<?=$_SESSION['user_name']?>&id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5>
-                  </div>
                 </div>
-              <?php } else{ ?>
-              <div class="card bg-light text-dark">
-                <div class="mb-3 p-3 d-flex text-light" style="background-color: #953553">
-                  <img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 justify-content-start" alt="">
-                  <h3 id="user_name" class="align-self-center">Guest</h3>
+                <div class="mb-3 text-center">
+                  <h3><?=$user_data['first_name']?> <?=$user_data['last_name']?></h3>
                 </div>
-                <div class="card-body">
-                  <p class="lead card-text">You are viewing this page as a guest. Login to get more access to features.</p>
-                  <h5><a href="login.php" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Login</a></h5>
+                <div class="mb-3 text-center">
+                  <p class="lead">@<?=$user_data['user_name']?></p>
+                </div>
+                <div class="mb-3 text-center">
+                  <p class="lead"><?=$profile['bio']?></p>
+                </div>
+                <div class="h4 p-3 mb-5 d-flex justify-content-evenly">
+                  <a href="http://www.facebook.com/<?=$profile['fb_username']?>"><i class="bi bi-facebook"></i></a>
+                  <a href="https://www.instagram.com/<?=$profile['in_username']?>"><i class="bi bi-instagram text-danger"></i></a>
+                  <a href="https://www.linkedin.com/in/<?=$profile['li_username']?>"><i class="bi bi-linkedin text-info"></i></a>
+                  <a href="https://wa.me/<?=$user_data['phone_number']?>"><i class="bi bi-whatsapp text-success"></i></a>
                 </div>
               </div>
-              <?php } ?>
             </div>
             <div class="col-md-6">
-							<?php foreach($blogs as $value): ?>
-              <div class="card text-dark">
-                <div class="card-body mb-1">
-									<div>
-                    <h4><a href="view_blog.php?id=<?=$value['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$value['title']?></a></h4>
-                    <h6 style="font-size:18px;color:grey;font-weight:bold"><i class="bi bi-person-circle text-warning me-2"></i><i><?=$value['author']?></i></h6>
+              <div class="container">
+                <h3 class="text-center fw-bold pt-3" style="color: #953553">Posts</h3>
+                <hr>
+                <?php
+                //fetch all the posts made by profile owner
+                $post = $conn->prepare("SELECT * FROM blog WHERE created_by=:cb ORDER BY blog_id DESC");
+                $post->bindParam(":cb",$user_data['user_id']);
+                $post->execute();
+                $showPost = [];
+
+                while ($row = $post->fetch(PDO::FETCH_BOTH)) {
+                  $showPost = $row;
+                ?>
+                <div class="row-sm d-flex mb-3">
+                  <div class="col-md-8">
+                    <h3><a href="view_blog.php?id=<?=$showPost['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$showPost['title']?></a></h3>
+                    <?php
+                    //fetch category of blog
+                    $cat = $conn->prepare("SELECT * FROM category WHERE category_id=:cid");
+                    $cat->bindParam(":cid",$showPost['category']);
+                    $cat->execute();
+                    $cate = [];
+
+                    while ($row = $cat->fetch(PDO::FETCH_BOTH)){
+                      $cate = $row;
+                    }
+                     ?>
+                     <h5><i class="text-warning">Section: </i><?=$cate['category_name']?></h5>
+                    <p><?=$showPost['date_created']?></p>
+                  </div>
+                  <div class="col-4">
+                    <img src="../images/<?=$showPost['img']?>" style="height:100px; width:100px;" class="d-flex d-sm-block order ms-auto p-2 bd-highlight image-fluid" alt="No Available Image">
                   </div>
                   <hr>
-                  <div class="row-sm d-flex justify-content-between">
-                    <div class="col-md-8">
-                      <p class="card-text mb-3" style="font-size:20px"><?= substr($value['body'],0,100)." . . ."?></p>
-                    </div>
-                    <div class="col-sm-4 d-flex">
-                      <?php if ($value['img'] >= 1){ ?>
-                      <img src="../images/<?=$value['img']?>" style="height:100px; width:100px;" class="d-flex d-sm-block order ms-auto p-2 bd-highlight image-fluid" alt="No Available Image">
-                    <?php }else{ ?>
-                      <p></p>
-                      <?php } ?>
-                    </div>
-                  </div>
                 </div>
+                <?php } ?>
               </div>
-						<?php endforeach; ?>
 					</div>
           <div class="col-md-3">
             <div class="p-2 mb-1 card bg-light text-dark">
@@ -179,48 +180,32 @@ $blogs = fetchBlogs($conn);
       <!--Footer-->
       <?php include "../includes/footer.php"; ?>
 
+
       <!-- Modal -->
       <div class="modal fade" id="login" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
+              <div class="text-center p-0 text-dark">
+                <h3 style="color: #953553">Hi <?=$_SESSION['name']?></h3>
+              </div class="card-title mb-3">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="col-md-12">
                 <div class="card bg-light text-dark">
-                  <div class="card-body text-center">
-                    <p class="card-text mb-3">
-                      <?php
-                      //check session and display info
-                      if (isset($_SESSION['name'])) {
-                        echo "Hi ".ucwords($_SESSION['name']);
-                      }else {
-                        echo "You are viewing this page as a guest. Login to gain more access to our features.";
-                      }
-                      ?>
-                    </p>
-                  </div>
+                  <div class="card-body">
+                    <div class="mb3 px-3">
+                      <strong><h5 class="py-3"><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5></strong>
+                      <p class="lead"><a href="action.php?logout=<?=$_SESSION['user_id']?>">Logout</a></p>
+                    </div>
                 </div>
-                <?php
-            		if(isset($_SESSION['user_id'])){
-            			?>
-                        <div class="mb3 px-3">
-                        	<strong><h5 class="py-3"><a href="profile.php?id=<?=$_SESSION['user_id']?>" class="text-decoration-none text_start"><i class="bi bi-person-lines-fill"></i>&nbsp;&nbsp; Profile</a></h5></strong>
-                          <p class="lead"><a href="action.php?logout=<?=$_SESSION['user_id']?>">Logout</a></p>
-                        </div>
-                        <?php } else{ ?>
-            			<div class="mb-3 px-3">
-                    <p class="lead py-2"><a href="signup.php">Sign Up</a></p>
-                    <p class="lead"><a href="login.php">Login</a></p>
-            			</div>
-                    <?php } ?>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </div>
+    <script src="script.js"></script>
 </body>
 </html>
