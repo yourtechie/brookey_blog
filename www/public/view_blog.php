@@ -219,7 +219,11 @@ if(isset($_POST['send'])){
                       $writer_img = fetchImg($conn,$topWriters['created_by']);
                       ?>
                       <div class="col-3">
-                        <img src="../images/<?=$writer_img['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="No Available Image">
+                        <?php if($writer_img['dp_name'] > 0){ ?>
+                          <img src="../images/<?=$writer_img['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="<?=$writer_data['user_name']?>">
+    										<?php }else{ ?>
+                          <img src="../images/dummy.jpg" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
+                      <?php } ?>
                       </div>
                       <div class="col-9 pt-2">
                         <a href="view_profile.php?id=<?=$topWriters['created_by']?>" style="font-size:18px;font-weight:bold" class="text-secondary text-decoration-none"><?=$writer_data['first_name']?> <?=$writer_data['last_name']?></a>
