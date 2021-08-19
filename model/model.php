@@ -1,7 +1,7 @@
 <?php
 define("DBNAME","brookey_blog");
 define("DBUSER","root");
-define("DBPASS","vagrant");
+define("DBPASS","maywebapp");
 
 try{
 $conn=new PDO("mysql:host=localhost;dbname=".DBNAME,DBUSER,DBPASS);
