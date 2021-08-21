@@ -1,5 +1,4 @@
 <?php
-include '../includes/db.php';
 
 if(isset($_POST['submit'])){
   $error = array();
@@ -63,11 +62,40 @@ if(isset($_POST['submit'])){
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Signup</title>
+    <title>LogTrace | Signup</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
   </head>
   <body>
+    <!--Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark text-light fixed-top" style="background-color: #953553">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">LOGtrace</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav px-4 ms-auto mb-3 mb-lg-2">
+        <li class="nav-item px-4">
+          <a class="nav-link" href="/"><i class="bi bi-house-door-fill px-2"></i>Home</a>
+        </li>
+        <li class="nav-item px-4">
+          <a class="nav-link" href="articles"><i class="bi bi-journals px-2 text-primary"></i>Articles</a>
+        </li>
+        <li class="nav-item px-4">
+          <a class="nav-link" href="stories"><i class="bi bi-ladder px-2 text-success"></i>Stories</a>
+        </li>
+        <li class="nav-item px-4">
+          <a class="nav-link" href="poems"><i class="bi bi-book px-2 text-info"></i>Poems</a>
+        </li>
+        <li class="nav-item px-4">
+          <a class="nav-link" href="post"><i class="bi bi-plus-lg px-2 text-warning"></i>Create Post</a>
+        </li>
+      </ul>
+      <li class="btn btn-white nav-link active text-light btn-md gx-4" aria-current="page" data-bs-toggle="modal" data-bs-target="#login">Account</li>
+    </div>
+  </div>
+    </nav>
     <div class="container bg-light pt-3">
 			<div class="container-fluid">
         <h3 class="fw-bold" style="color: #953553">Create LogTrace Account</h3>
@@ -159,5 +187,6 @@ if(isset($_POST['submit'])){
       </div>
 
       </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </body>
 </html>
