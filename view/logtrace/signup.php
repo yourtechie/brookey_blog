@@ -50,7 +50,7 @@ if(isset($_POST['submit'])){
     $stmt->bindParam(":un", $_POST['username']);
     $stmt->bindParam(":hsh", $hash);
     $stmt->execute();
-    header("Location:login.php?message=Dear ".$_POST['firstname'].", your account has been created, you can now login.");
+    header("Location:login?message=Dear ".$_POST['firstname'].", your account has been created, you can now login.");
       }
     }
   }
