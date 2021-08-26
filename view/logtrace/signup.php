@@ -100,7 +100,7 @@ if(isset($_POST['submit'])){
 			<div class="container-fluid">
         <h3 class="fw-bold" style="color: #953553">Create LogTrace Account</h3>
         <hr>
-        <form action="signup.php" method="post">
+        <form action="" method="post">
           <div class="mb-3">
             <label for="firstname" class="col-form-label">
               First Name:
