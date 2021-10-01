@@ -18,7 +18,8 @@ while($row=$fetch->fetch(PDO::FETCH_BOTH)){
     <title>LogTrace | Poems</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-  </head>
+		<link rel="stylesheet" href="/styles.css">
+	</head>
   <body>
     <!--Navbar -->
 		<nav class="navbar navbar-expand-lg navbar-dark text-light fixed-top" style="background-color: #953553">
@@ -59,7 +60,7 @@ while($row=$fetch->fetch(PDO::FETCH_BOTH)){
                 <div class="card bg-light text-dark">
 									<div class="mb-2 p-1 d-flex text-light" style="background-color: #953553">
 										<?php if($displayPic['dp_name'] < 1){ ?>
-										<img src="../images/dummy.jpg" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
+										<img src="../images/dummy.jpg" width="60px" height="60px" class="rounded-circle p-2 justify-content-start" alt="">
 										<?php }else{ ?>
 										<img src="../images/<?=$displayPic['dp_name']?>" width="70px" height="70px" class="rounded-circle p-2 justify-content-start" alt="">
 										<?php } ?>
@@ -88,12 +89,12 @@ while($row=$fetch->fetch(PDO::FETCH_BOTH)){
                 <div class="card-body mb-1">
 									<div>
                     <h4><a href="view_blog?id=<?=$value['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$value['title']?></a></h4>
-                    <h6 style="font-size:18px;color:grey;font-weight:bold"><i class="bi bi-person-circle text-warning me-2"></i><i><?=$value['author']?></i></h6>
+                    <h6 style="color:grey;font-weight:bold"><i class="bi bi-person-circle text-warning me-2"></i><i><?=$value['author']?></i></h6>
                   </div>
                   <hr>
                   <div class="row-sm d-flex justify-content-between">
                     <div class="col-md-8">
-                      <p class="card-text mb-3" style="font-size:20px"><?= substr($value['body'],0,100)." . . ."?></p>
+                      <p class="card-text mb-3"><?= substr($value['body'],0,100)." . . ."?></p>
                     </div>
                     <div class="col-sm-4 d-flex">
                       <?php if ($value['img'] >= 1){ ?>
