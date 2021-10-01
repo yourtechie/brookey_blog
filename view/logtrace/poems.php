@@ -89,12 +89,12 @@ while($row=$fetch->fetch(PDO::FETCH_BOTH)){
                 <div class="card-body mb-1">
 									<div>
                     <h4><a href="view_blog?id=<?=$value['blog_id']?>" class="fw-bold text-decoration-none text-secondary"><?=$value['title']?></a></h4>
-                    <h6 style="color:grey;font-weight:bold"><i class="bi bi-person-circle text-warning me-2"></i><i><?=$value['author']?></i></h6>
+                    <h6 style="font-size:18px;color:grey;font-weight:bold"><i class="bi bi-person-circle text-warning me-2"></i><i><?=$value['author']?></i></h6>
                   </div>
                   <hr>
                   <div class="row-sm d-flex justify-content-between">
                     <div class="col-md-8">
-                      <p class="card-text mb-3"><?= substr($value['body'],0,100)." . . ."?></p>
+                      <p class="card-text mb-3" style="font-size:20px"><?= substr($value['body'],0,100)." . . ."?></p>
                     </div>
                     <div class="col-sm-4 d-flex">
                       <?php if ($value['img'] >= 1){ ?>
